@@ -6,7 +6,7 @@ library = Library.new
 
 puts ""
 puts "The most popular book is #{library.get_book}."
-puts "Reader who often takes books is #{library.get_reader}."
+puts "Reader who often takes \"Dead Souls\" is #{library.get_reader("Dead Souls")}."
 puts "People ordered one of the three most popular books: #{library.get_people.join(", ")}"
 puts ""
 

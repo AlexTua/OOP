@@ -16,8 +16,8 @@ include WorkData
     load_orders(@orders, @books, @readers)
   end
 
-  def get_reader #Who often takes the book
-    get_stat("reader")
+  def get_reader(book) #Who often takes the book
+    get_stat("reader", book)
   end
 
   def get_book #What is the most popular book
@@ -38,12 +38,14 @@ include WorkData
   end
 
   private
-    def get_stat(rate_by)
+    def get_stat(rate_by, book_title = nil)
       stat = {}
       frequency = []
       case rate_by 
         when "reader"
-          orders.each { |order| frequency.push(order.reader.name) }
+          orders.each do |order| 
+            frequency.push(order.reader.name) if order.book.title == book_title
+          end
         when "book"
           orders.each { |order| frequency.push(order.book.title) }
       end
