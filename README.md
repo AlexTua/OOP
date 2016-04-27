@@ -12,4 +12,4 @@
 * Save all Library data to file(s)
 * Get all Library data from file(s)
 
-![screen](http://s017.radikal.ru/i442/1604/23/8ebe8d62974c.png)
+![screen](http://s020.radikal.ru/i714/1604/08/a580d507d2ab.png)

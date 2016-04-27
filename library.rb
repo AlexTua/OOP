@@ -16,58 +16,28 @@ include WorkData
     load_orders(@orders, @books, @readers)
   end
 
-  def get_reader(book) #Who often takes the book
-    get_stat("reader", book)
+  def get_who_often_takes_book(book) 
+    book_orders = @orders.select { |order| order.book.title == book }
+    book_orders = book_orders.group_by { |order| order.reader.name }
+    book_orders.sort_by { |name, orders| orders.size }.last[0]
   end
 
-  def get_book #What is the most popular book
-    get_stat("book")
+  def get_most_popular_book 
+    book_orders = @orders.group_by { |order| order.book.title }
+    book_orders.sort_by { |title, orders| orders.size }.last[0]
   end
 
-  def get_people #How many people ordered one of the three most popular books
-    popular_book = get_stat("book")
-    people = orders.select { |order| order.book.title == popular_book }
-    people.map { |order| order = order.reader.name }.uniq
+  def get_people_ordered_three_books
+    book_orders = @orders.group_by { |order| order.book.title }
+    three_books = book_orders.sort_by { |title, orders| orders.size }.last(3)
+    three_book_orders = three_books.inject([], :concat).select { |e| e.is_a?(Array) }.inject([], :concat)
+    three_book_orders.map { |order| order.reader.name }.uniq.size
   end
 
   def save_data
-    save_authors(authors)
-    save_readers(readers)
-    save_orders(orders)
-    save_books(books)     
+    save_authors(@authors)
+    save_readers(@readers)
+    save_orders(@orders)
+    save_books(@books)     
   end
-
-  private
-    def get_stat(rate_by, book_title = nil)
-      stat = {}
-      frequency = []
-      case rate_by 
-        when "reader"
-          orders.each do |order| 
-            frequency.push(order.reader.name) if order.book.title == book_title
-          end
-        when "book"
-          orders.each { |order| frequency.push(order.book.title) }
-      end
-      frequency.uniq.each { |name| stat[name] = frequency.count(name) }
-      stat.sort_by { |name, count| count }.last[0]
-    end 
 end
-
-=begin
-  def who_often_takes_the_book
-    often_take = {}
-    reader_names = []
-    orders.each { |order| reader_names.push(order.reader.name) }
-    reader_names.uniq.each { |name| often_take[name] = reader_names.count(name) }
-    often_take.sort_by { |name, count| count }.last[0]
-=end
-
-=begin
-def get_the_most_popular_book
-    most_popular = {}
-    books_titles = []
-    orders.each { |order| books_titles.push(order.book.title) }
-    books_titles.uniq.each { |title| most_popular[title] = books_titles.count(title) }
-    most_popular.sort_by { |title, count| count }.last[0]
-=end
