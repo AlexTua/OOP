@@ -30,8 +30,7 @@ include WorkData
   def get_people_ordered_three_books
     book_orders = @orders.group_by { |order| order.book.title }
     three_books = book_orders.sort_by { |title, orders| orders.size }.last(3)
-    three_book_orders = three_books.inject([], :concat).select { |e| e.is_a?(Array) }.inject([], :concat)
-    three_book_orders.map { |order| order.reader.name }.uniq.size
+    three_books.map { |e| e[1] }.inject([], :concat).map { |order| order.reader.name }.uniq.size
   end
 
   def save_data
