@@ -11,7 +11,6 @@ include WorkData
   def initialize
     @orders, @books, @readers, @authors = [], [], [], []
     load_data
-
   end
 
   def get_who_often_takes_book(book) 

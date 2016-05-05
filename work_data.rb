@@ -8,7 +8,7 @@ module WorkData
         when :@authors
           CSV.open('db/authors.csv', 'w') do |file|
             self.instance_variable_get(:@authors).each do |author|
-             file << [author.name, author.biography]
+              file << [author.name, author.biography]
             end
           end 
           puts "Authors has been saved."
@@ -45,7 +45,7 @@ module WorkData
       case var
         when :@authors
           CSV.foreach('db/authors.csv', 'r') do |row|
-             self.instance_variable_get(:@authors) << Author.new(row[0], row[1])
+            self.instance_variable_get(:@authors) << Author.new(row[0], row[1])
           end
           puts "Authors has been loaded."
 
@@ -59,8 +59,8 @@ module WorkData
           CSV.foreach('db/books.csv', 'r') do |row|
             author = self.instance_variable_get(:@authors).select { |author| author.name == row[1] }.pop
             self.instance_variable_get(:@books) << Book.new(row[0], author)
-           end
-           puts "Books has been loaded." 
+          end
+          puts "Books has been loaded." 
 
         when :@orders
           CSV.foreach('db/orders.csv', 'r') do |row|
