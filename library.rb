@@ -5,15 +5,13 @@ require './author.rb'
 require './work_data.rb'
 
 class Library
-attr_accessor :books, :orders, :readers, :authors
+attr_accessor :orders, :books, :readers, :authors
 include WorkData
 
   def initialize
-    @books, @orders, @readers, @authors = [], [], [], []
-    load_authors(@authors)
-    load_readers(@readers)
-    load_books(@books, @authors)
-    load_orders(@orders, @books, @readers)
+    @orders, @books, @readers, @authors = [], [], [], []
+    load_data
+
   end
 
   def get_who_often_takes_book(book) 
@@ -23,20 +21,17 @@ include WorkData
   end
 
   def get_most_popular_book 
-    book_orders = @orders.group_by { |order| order.book.title }
-    book_orders.sort_by { |title, orders| orders.size }.last[0]
+    get_book_by_rate(1)[0][0]
   end
 
   def get_people_ordered_three_books
-    book_orders = @orders.group_by { |order| order.book.title }
-    three_books = book_orders.sort_by { |title, orders| orders.size }.last(3)
-    three_books.map { |e| e[1] }.inject([], :concat).map { |order| order.reader.name }.uniq.size
+    three_books = get_book_by_rate(3)
+    three_books.map { |e| e[1] }.flatten.map { |order| order.reader.name }.uniq.size
   end
-
-  def save_data
-    save_authors(@authors)
-    save_readers(@readers)
-    save_orders(@orders)
-    save_books(@books)     
-  end
+  
+  private
+    def get_book_by_rate(count)
+      book_orders = @orders.group_by { |order| order.book.title }
+      book_orders.sort_by { |title, orders| orders.size }.last(count)
+    end
 end
